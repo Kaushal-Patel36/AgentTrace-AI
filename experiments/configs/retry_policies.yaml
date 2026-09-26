@@ -1,0 +1,21 @@
+# Retry policy ablation experiment
+# Compares: no retries / default (3 retries, exponential backoff) / aggressive (5 retries)
+
+variants:
+  - label: "retry_disabled"
+    prompt_version: "v1"
+    config_version: "retry_ablation"
+    retry_policy: "disabled"
+    description: "No retries — fastest, least resilient"
+
+  - label: "retry_default"
+    prompt_version: "v1"
+    config_version: "retry_ablation"
+    retry_policy: "default"
+    description: "3 retries, 2x exponential backoff + jitter"
+
+  - label: "retry_aggressive"
+    prompt_version: "v1"
+    config_version: "retry_ablation"
+    retry_policy: "aggressive"
+    description: "5 retries, 2.5x backoff — max resilience, higher cost"

@@ -1,0 +1,11 @@
+# Keep the results directories versioned but ignore generated files
+evals/results/*.jsonl
+evals/results/*_summary.json
+!evals/results/sample_run.jsonl
+!evals/results/.gitkeep
+results/*.md
+results/*.csv
+!results/sample_comparison.md
+!results/sample_comparison.csv
+!results/.gitkeep
+agent_runs.db

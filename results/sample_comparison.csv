@@ -1,0 +1,11 @@
+variant,success_rate_pct,avg_score,p50_latency_ms,p95_latency_ms,p99_latency_ms,avg_cost_usd,total_cost_usd,avg_tokens,total_tasks,success_count,config_version
+prompt_v1_retry_off,64.0,0.591,1180,3240,4100,0.000312,0.01560,487,50,32,prompt_ablation
+prompt_v2_retry_off,72.0,0.668,1220,3380,4300,0.000335,0.01675,521,50,36,prompt_ablation
+prompt_v1_retry_on,76.0,0.712,1560,4100,5200,0.000489,0.02445,487,50,38,prompt_ablation
+prompt_v2_retry_on,85.0,0.796,1640,4350,5600,0.000521,0.02605,521,50,43,prompt_ablation
+stub_no_api,0.0,0.000,285,320,340,0.000000,0.00000,0,50,0,model_ablation
+gpt4o_mini,85.0,0.796,1640,4350,5600,0.000521,0.02605,521,50,43,model_ablation
+gpt4o_full,91.0,0.871,2180,5600,7200,0.003420,0.17100,498,50,46,model_ablation
+retry_disabled,72.0,0.668,1220,3380,4300,0.000335,0.01675,487,50,36,retry_ablation
+retry_default,85.0,0.796,1640,4350,5600,0.000521,0.02605,512,50,43,retry_ablation
+retry_aggressive,87.0,0.819,2200,6800,8900,0.000812,0.04060,534,50,44,retry_ablation

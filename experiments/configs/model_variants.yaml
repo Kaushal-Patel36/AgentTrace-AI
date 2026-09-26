@@ -1,0 +1,26 @@
+# Model variant ablation experiment
+# Compares stub (offline baseline), GPT-4o-mini (fast/cheap), and GPT-4o (best quality)
+
+variants:
+  - label: "stub_no_api"
+    prompt_version: "v1"
+    config_version: "model_ablation"
+    retry_policy: "disabled"
+    model_env: {}
+    description: "Offline stub baseline (no API key required)"
+
+  - label: "gpt4o_mini"
+    prompt_version: "v1"
+    config_version: "model_ablation"
+    retry_policy: "disabled"
+    model_env:
+      MODEL_NAME: "gpt-4o-mini"
+    description: "GPT-4o-mini: fast, cost-efficient"
+
+  - label: "gpt4o_full"
+    prompt_version: "v1"
+    config_version: "model_ablation"
+    retry_policy: "default"
+    model_env:
+      MODEL_NAME: "gpt-4o"
+    description: "GPT-4o: highest quality, higher cost"

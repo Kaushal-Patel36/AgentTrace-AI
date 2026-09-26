@@ -1,0 +1,28 @@
+# Prompt variant ablation experiment
+# Two prompt styles: v1 (brief, zero-shot) vs v2 (structured, few-shot style)
+# Cross-factored with retry policy on/off for a 2x2 design
+
+variants:
+  - label: "prompt_v1_retry_off"
+    prompt_version: "v1"
+    config_version: "prompt_ablation"
+    retry_policy: "disabled"
+    description: "Baseline: brief prompts, no retry"
+
+  - label: "prompt_v2_retry_off"
+    prompt_version: "v2"
+    config_version: "prompt_ablation"
+    retry_policy: "disabled"
+    description: "Structured prompts, no retry"
+
+  - label: "prompt_v1_retry_on"
+    prompt_version: "v1"
+    config_version: "prompt_ablation"
+    retry_policy: "default"
+    description: "Brief prompts + retry (3 attempts)"
+
+  - label: "prompt_v2_retry_on"
+    prompt_version: "v2"
+    config_version: "prompt_ablation"
+    retry_policy: "default"
+    description: "Structured prompts + retry (3 attempts) — expected best"

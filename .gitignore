@@ -1,0 +1,167 @@
+# ═══════════════════════════════════════════════════════════════════════════
+#  AgentTrace — .gitignore
+#  Covers: Python, secrets, eval artifacts, AI/ML outputs, IDEs, Terraform
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ── Secrets & credentials (NEVER commit these) ──────────────────────────────
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+secrets/
+credentials.json
+service-account.json
+azure-credentials.json
+
+# ── Python runtime ────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.pyd
+
+# ── Virtual environments ────────────────────────────────────────────────────
+.venv/
+.venv*/
+venv/
+env/
+ENV/
+.python-version
+
+# ── Build / distribution ─────────────────────────────────────────────────────
+build/
+dist/
+*.egg-info/
+*.egg
+MANIFEST
+.eggs/
+wheels/
+sdist/
+*.whl
+
+# ── Package managers ──────────────────────────────────────────────────────────
+pip-log.txt
+.pdm-python
+.pdm-build/
+.pixi/
+__pypackages__/
+
+# ── Testing & coverage ────────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+.hypothesis/
+.tox/
+nosetests.xml
+.cache
+
+# ── Type checkers / linters ───────────────────────────────────────────────────
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pytype/
+.pyre/
+.ruff_cache/
+
+# ── AgentTrace runtime artifacts ──────────────────────────────────────────────
+# SQLite checkpoint database (generated at runtime)
+agent_runs.db
+agent_runs.db-wal
+agent_runs.db-shm
+
+# Eval JSONL results (large generated files — keep only sample)
+evals/results/*.jsonl
+evals/results/*_summary.json
+!evals/results/sample_run.jsonl
+
+# Experiment comparison outputs (keep samples committed)
+results/comparison_*.md
+results/comparison_*.csv
+!results/sample_comparison.md
+!results/sample_comparison.csv
+
+# ── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/
+*.log.*
+
+# ── Terraform ────────────────────────────────────────────────────────────────
+**/.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+*.tfplan
+**/*.tfplan
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+crash.log
+crash.*.log
+.terraformrc
+terraform.rc
+
+# ── Docker ────────────────────────────────────────────────────────────────────
+.docker/
+
+# ── IDEs ─────────────────────────────────────────────────────────────────────
+# VS Code — keep settings if you standardise your team's setup
+.vscode/launch.json
+.vscode/tasks.json
+# Uncomment to ignore all VS Code settings:
+# .vscode/
+
+# JetBrains (PyCharm, IntelliJ)
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Cursor
+.cursorignore
+.cursorindexingignore
+
+# Vim
+*.swp
+*.swo
+*~
+
+# ── macOS ────────────────────────────────────────────────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# ── Windows ──────────────────────────────────────────────────────────────────
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ── Jupyter Notebooks ────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ── Sphinx docs ───────────────────────────────────────────────────────────────
+docs/_build/
+/site
+
+# ── Miscellaneous ─────────────────────────────────────────────────────────────
+*.bak
+*.tmp
+*.orig
+*.patch
+*.rej
+.gemini/
+requirements.lock.txt
+infrastructure/tfplan

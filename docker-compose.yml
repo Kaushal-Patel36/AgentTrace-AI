@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+  langgraph-app:
+    build: .
+    image: langgraph-multi-agent:local
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    environment:
+      SERVICE_NAME: "langgraph-multi-agent"
+      SERVICE_VERSION: "0.1.0"
+      DEPLOYMENT_ENV: "docker-compose"
+      MODEL_NAME: "openai/gpt-4o-mini"
+      # Provide one of these for real LLM calls
+      # OPENAI_API_KEY: "your-key" # OR
+      # GITHUB_MODELS_API_KEY: "your-github-pat"
+      # APPINSIGHTS_CONNECTION_STRING: "InstrumentationKey=...;IngestionEndpoint=..." # for telemetry
+    restart: unless-stopped

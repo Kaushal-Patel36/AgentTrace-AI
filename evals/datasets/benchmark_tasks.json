@@ -1,0 +1,803 @@
+{
+  "version": "1.0",
+  "description": "LangGraph multi-agent benchmark: 50 tasks across 5 categories",
+  "categories": ["summarization", "extraction", "planning", "tool_use", "error_recovery"],
+  "tasks": [
+
+    {
+      "task_id": "sum_001",
+      "category": "summarization",
+      "difficulty": "easy",
+      "description": "Summarize a technical paragraph concisely",
+      "input": "Summarize the following text in no more than 50 words: 'The Industrial Revolution, which began in Britain in the late 18th century, fundamentally transformed manufacturing processes. Steam-powered machinery replaced manual labor in textile mills and iron foundries, enabling mass production at unprecedented scale. This shift from agrarian economies to industrial capitalism drove urbanization, created a factory working class, and laid the groundwork for modern economic growth.'",
+      "expected_output": "Brief summary mentioning industrialization, steam power, and economic transformation",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["industri", "steam", "manufactur", "economic", "transform"],
+        "min_matches": 2,
+        "max_words_check": 80
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "sum_002",
+      "category": "summarization",
+      "difficulty": "easy",
+      "description": "Extract key points as bullet list",
+      "input": "List the 3 main benefits of OpenTelemetry for LLM applications as bullet points: distributed tracing across model calls, vendor-neutral instrumentation that works with any backend, and automatic correlation of latency with token usage for cost attribution.",
+      "expected_output": "Bullet list with tracing, vendor-neutral, and token/cost points",
+      "grading": {
+        "method": "format_check",
+        "checks": ["has_bullet_points", "min_words:15"],
+        "min_score": 0.5
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "sum_003",
+      "category": "summarization",
+      "difficulty": "medium",
+      "description": "Summarize with a specific audience constraint",
+      "input": "Explain what a Large Language Model is to a business executive (non-technical), in exactly 2 sentences. Focus on business value, not technical mechanisms.",
+      "expected_output": "2-sentence non-technical explanation of LLM value",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["language", "automate", "text", "generate", "business"],
+        "min_matches": 2
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "sum_004",
+      "category": "summarization",
+      "difficulty": "medium",
+      "description": "Condense meeting notes into action items",
+      "input": "Extract ONLY the action items from these meeting notes as a numbered list: 'The team discussed Q3 roadmap. Alice will update the API docs by Friday. Bob agreed to review the Terraform plan before deployment. The authentication service needs refactoring - Carol to create a ticket. Retrospective is scheduled for next Tuesday.'",
+      "expected_output": "Numbered list of 3 action items (Alice: docs, Bob: Terraform, Carol: ticket)",
+      "grading": {
+        "method": "format_check",
+        "checks": ["has_numbered_list", "min_words:10"],
+        "min_score": 0.5
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "sum_005",
+      "category": "summarization",
+      "difficulty": "medium",
+      "description": "Abstract generation",
+      "input": "Write a one-paragraph abstract (100-150 words) for a paper titled 'LLM Observability at Scale: Lessons from Production Deployments'. The abstract should cover: why observability matters for LLMs, what metrics to track (latency, token usage, cost), how OpenTelemetry standardizes this, and what outcomes organizations achieve.",
+      "expected_output": "Abstract covering observability, metrics, OpenTelemetry, and outcomes",
+      "grading": {
+        "method": "rubric_score",
+        "criteria": [
+          {"name": "mentions_observability", "keywords": ["observ"], "weight": 1.0},
+          {"name": "mentions_metrics", "keywords": ["latency", "token", "cost", "metric"], "weight": 1.5},
+          {"name": "mentions_otel", "keywords": ["opentelemetry", "otel", "telemetry"], "weight": 1.0},
+          {"name": "mentions_outcomes", "keywords": ["outcome", "benefit", "result", "improve", "reduc"], "weight": 1.0}
+        ],
+        "min_score": 0.5
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "sum_006",
+      "category": "summarization",
+      "difficulty": "hard",
+      "description": "Compare and contrast two approaches",
+      "input": "In 3 bullet points, compare RAG (Retrieval-Augmented Generation) versus fine-tuning for adapting LLMs to domain-specific knowledge. For each point, state which approach wins and why.",
+      "expected_output": "3 bullet points comparing RAG vs fine-tuning",
+      "grading": {
+        "method": "rubric_score",
+        "criteria": [
+          {"name": "mentions_rag", "keywords": ["rag", "retrieval"], "weight": 1.0},
+          {"name": "mentions_finetuning", "keywords": ["fine-tun", "finetun", "training"], "weight": 1.0},
+          {"name": "has_comparison", "keywords": ["vs", "versus", "compared", "while", "whereas", "better"], "weight": 1.0}
+        ],
+        "min_score": 0.5
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "sum_007",
+      "category": "summarization",
+      "difficulty": "easy",
+      "description": "Headline generation",
+      "input": "Generate a compelling 10-word headline for an article about how AI agents are transforming software development workflows by automatically writing, testing, and reviewing code.",
+      "expected_output": "Short headline about AI agents and software development",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["ai", "agent", "code", "software", "develop", "automat", "transform"],
+        "min_matches": 2,
+        "max_words_check": 20
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "sum_008",
+      "category": "summarization",
+      "difficulty": "medium",
+      "description": "Explain technical concept simply",
+      "input": "Explain vector embeddings to someone who only knows basic Python. Use an analogy and give one concrete use case. Keep it under 80 words.",
+      "expected_output": "Simple explanation of embeddings with analogy and use case",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["vector", "embed", "similar", "number"],
+        "min_matches": 2
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "sum_009",
+      "category": "summarization",
+      "difficulty": "hard",
+      "description": "Executive briefing under constraints",
+      "input": "Write a 4-sentence executive briefing on the risks of deploying LLMs in production without observability tooling. Must include: financial risk (unexpected costs), reliability risk (silent failures), compliance risk (data leakage), and a recommended mitigation.",
+      "expected_output": "4-sentence briefing covering cost, reliability, compliance risks and mitigation",
+      "grading": {
+        "method": "rubric_score",
+        "criteria": [
+          {"name": "financial_risk", "keywords": ["cost", "financ", "expensive", "budget"], "weight": 1.0},
+          {"name": "reliability_risk", "keywords": ["reliab", "failure", "outage", "downtime", "silent"], "weight": 1.0},
+          {"name": "compliance_risk", "keywords": ["complian", "data", "privacy", "leakage", "regulation"], "weight": 1.0},
+          {"name": "mitigation", "keywords": ["mitigat", "recommend", "implement", "monitor", "observ"], "weight": 1.0}
+        ],
+        "min_score": 0.5
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "sum_010",
+      "category": "summarization",
+      "difficulty": "medium",
+      "description": "TLDR generation",
+      "input": "Write a TL;DR (1-2 sentences, max 30 words) for this: LangGraph enables developers to build stateful, multi-actor LLM applications by modeling agent workflows as directed graphs. Each node in the graph is an agent or tool, edges define transitions, and state is passed between nodes, enabling complex reasoning chains with cycles, retries, and parallel execution.",
+      "expected_output": "Short TLDR about LangGraph's stateful multi-actor graph workflow",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["langgraph", "graph", "agent", "state", "workflow"],
+        "min_matches": 2,
+        "max_words_check": 40
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "ext_001",
+      "category": "extraction",
+      "difficulty": "easy",
+      "description": "Named entity extraction",
+      "input": "Extract all named entities (people, organizations, locations, dates) from this text as a structured list: 'On March 15, 2024, Satya Nadella announced that Microsoft Azure would expand its OpenAI partnership with a $10B investment. The deal was finalized in Seattle and covers GPT-4 deployment across Azure regions in the US, EU, and Asia-Pacific.'",
+      "expected_output": "List of entities: Satya Nadella, Microsoft, Azure, OpenAI, Seattle, etc.",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["satya nadella", "microsoft", "azure", "openai", "seattle", "march"],
+        "min_matches": 3
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "ext_002",
+      "category": "extraction",
+      "difficulty": "easy",
+      "description": "Key-value extraction",
+      "input": "Extract the following fields from this job posting and return them as JSON: {title, company, location, salary_range, required_experience_years}. Job posting: 'Senior ML Engineer at DataCorp in Austin, TX. Salary: $160,000-$200,000/year. Requirements: 5+ years of machine learning experience, proficiency in Python and PyTorch.'",
+      "expected_output": "JSON with title=Senior ML Engineer, company=DataCorp, location=Austin TX",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["senior ml engineer", "datacorp", "austin", "160", "5"],
+        "min_matches": 3
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "ext_003",
+      "category": "extraction",
+      "difficulty": "medium",
+      "description": "Requirement extraction from spec",
+      "input": "Extract ONLY the functional requirements (not non-functional) from this spec as a numbered list: 'The system must authenticate users via OAuth2. Response time must be under 200ms. Users can upload files up to 100MB. The API must support pagination with cursor-based navigation. Uptime must be 99.9%. The system shall send email notifications on job completion.'",
+      "expected_output": "Numbered list of functional requirements: OAuth2, file upload, pagination, email notifications",
+      "grading": {
+        "method": "rubric_score",
+        "criteria": [
+          {"name": "oauth", "keywords": ["oauth", "authenticat"], "weight": 1.0},
+          {"name": "file_upload", "keywords": ["upload", "file", "100mb"], "weight": 1.0},
+          {"name": "pagination", "keywords": ["pagina", "cursor"], "weight": 1.0},
+          {"name": "notification", "keywords": ["notif", "email"], "weight": 1.0}
+        ],
+        "min_score": 0.5
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "ext_004",
+      "category": "extraction",
+      "difficulty": "medium",
+      "description": "Sentiment and opinion extraction",
+      "input": "Classify the sentiment (positive/negative/neutral) of each sentence and extract the main opinion in this review: 'The API documentation is excellent and very clear. However, the rate limiting is frustratingly low for production use. The customer support team responded within 2 hours, which was impressive. Pricing seems reasonable for the features offered.'",
+      "expected_output": "Sentence-by-sentence sentiment with positive (docs, support), negative (rate limits)",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["positive", "negative", "neutral", "sentiment", "documentation", "rate"],
+        "min_matches": 3
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "ext_005",
+      "category": "extraction",
+      "difficulty": "hard",
+      "description": "Structured data from unstructured log",
+      "input": "Parse this error log line into a JSON object with fields: timestamp, severity, service, error_code, message. Log: '[2024-03-15T14:23:45Z] ERROR service=payment-api error_code=503 msg=\"Upstream timeout after 30s waiting for stripe-gateway\"'",
+      "expected_output": "JSON with timestamp=2024-03-15T14:23:45Z, severity=ERROR, service=payment-api",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["2024-03-15", "error", "payment-api", "503", "stripe"],
+        "min_matches": 3
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "ext_006",
+      "category": "extraction",
+      "difficulty": "medium",
+      "description": "Table extraction",
+      "input": "Convert this data into a markdown table with columns: Model, Context Window, Cost per 1M tokens (input), Best Use Case. Data: GPT-4o (128k context, $5 input, complex reasoning), GPT-4o-mini (128k context, $0.15 input, fast tasks), Claude-3.5-Sonnet (200k context, $3 input, long documents), Gemini-1.5-Pro (1M context, $3.5 input, multimodal).",
+      "expected_output": "Markdown table with 4 model rows and 4 columns",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["gpt-4o", "claude", "gemini", "context", "cost"],
+        "min_matches": 3
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "ext_007",
+      "category": "extraction",
+      "difficulty": "easy",
+      "description": "Date and time parsing",
+      "input": "Extract all dates and times from this text and normalize them to ISO 8601 format: 'The deployment is scheduled for next Monday (April 21st). The rollback window closes at 3pm PST on Tuesday the 22nd. The post-mortem will be held two weeks later.'",
+      "expected_output": "ISO dates: 2024-04-21, 2024-04-22T15:00:00-08:00, plus note about two weeks later",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["april", "21", "22", "15:00", "iso", "date"],
+        "min_matches": 2
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "ext_008",
+      "category": "extraction",
+      "difficulty": "hard",
+      "description": "Contract clause extraction",
+      "input": "Identify and label the clause type (liability, termination, payment, IP ownership) for each clause: (1) Either party may terminate this agreement with 30 days written notice. (2) Payment is due within 45 days of invoice. (3) Any IP created during the engagement belongs to the client. (4) Consultant's liability is capped at the total fees paid in the prior 3 months.",
+      "expected_output": "Labeled clauses: (1) termination, (2) payment, (3) IP, (4) liability",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["terminat", "payment", "ip", "intellect", "liabilit"],
+        "min_matches": 3
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "ext_009",
+      "category": "extraction",
+      "difficulty": "medium",
+      "description": "API parameter extraction",
+      "input": "Extract all parameters and their types from this Python function signature and return them as a JSON array: def process_batch(data: List[Dict[str, Any]], model_name: str = 'gpt-4o-mini', max_retries: int = 3, temperature: float = 0.7, stream: bool = False) -> AsyncGenerator[str, None]:",
+      "expected_output": "JSON array with params: data(List), model_name(str), max_retries(int), temperature(float), stream(bool)",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["data", "model_name", "max_retries", "temperature", "stream", "bool", "float"],
+        "min_matches": 4
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "ext_010",
+      "category": "extraction",
+      "difficulty": "medium",
+      "description": "Metric extraction from report",
+      "input": "Extract all numeric metrics from this quarterly report text and classify them (revenue, users, growth rate, cost): Q3 results: Monthly active users reached 2.4M (up 18% QoQ). Revenue was $12.8M, with infrastructure costs of $3.2M (25% of revenue). Customer acquisition cost dropped to $42 per user. Churn rate: 2.1%.",
+      "expected_output": "Structured metrics: MAU=2.4M, revenue=$12.8M, infra=$3.2M, CAC=$42, churn=2.1%",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["2.4", "12.8", "3.2", "42", "2.1", "churn", "revenue", "user"],
+        "min_matches": 4
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "plan_001",
+      "category": "planning",
+      "difficulty": "easy",
+      "description": "Project launch plan",
+      "input": "Create a step-by-step plan (numbered list) to launch a new REST API service to production. Include at minimum: testing, staging deployment, monitoring setup, and production deployment steps.",
+      "expected_output": "Numbered plan with testing, staging, monitoring, and production steps",
+      "grading": {
+        "method": "plan_quality",
+        "keywords": ["test", "staging", "monitor", "deploy", "production"],
+        "min_score": 0.4
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "plan_002",
+      "category": "planning",
+      "difficulty": "medium",
+      "description": "Incident response plan",
+      "input": "Create a 5-step incident response plan for a production outage of a payment processing API. Include detection, triage, mitigation, communication, and post-mortem steps.",
+      "expected_output": "5-step IR plan covering detection, triage, mitigation, communication, post-mortem",
+      "grading": {
+        "method": "rubric_score",
+        "criteria": [
+          {"name": "detection", "keywords": ["detect", "alert", "monitor", "alarm"], "weight": 1.0},
+          {"name": "triage", "keywords": ["triage", "assess", "identify", "diagnos"], "weight": 1.0},
+          {"name": "mitigation", "keywords": ["mitigat", "fix", "rollback", "resolve", "patch"], "weight": 1.5},
+          {"name": "communication", "keywords": ["communicat", "notif", "stakeholder", "status page"], "weight": 1.0},
+          {"name": "postmortem", "keywords": ["postmortem", "post-mortem", "retrospect", "learn"], "weight": 1.0}
+        ],
+        "min_score": 0.5
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "plan_003",
+      "category": "planning",
+      "difficulty": "medium",
+      "description": "Data migration plan",
+      "input": "Plan a zero-downtime database migration from PostgreSQL 13 to PostgreSQL 16 for a production system with 500GB of data. Provide phases with estimated time for each.",
+      "expected_output": "Phased migration plan with backup, dual-write, validation, cutover steps",
+      "grading": {
+        "method": "plan_quality",
+        "keywords": ["backup", "migrat", "validat", "cutover", "downtime", "phase"],
+        "min_score": 0.4
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "plan_004",
+      "category": "planning",
+      "difficulty": "hard",
+      "description": "Multi-team coordination plan",
+      "input": "Create a coordination plan for 3 teams (Frontend, Backend, DevOps) to release a new feature that requires: a new database schema, 2 new API endpoints, and a UI component. Include dependencies and sequencing.",
+      "expected_output": "Coordinated plan with dependencies: DevOps first (infra), Backend (API), Frontend (UI)",
+      "grading": {
+        "method": "rubric_score",
+        "criteria": [
+          {"name": "database", "keywords": ["database", "schema", "migrat", "db"], "weight": 1.0},
+          {"name": "api", "keywords": ["api", "endpoint", "backend"], "weight": 1.0},
+          {"name": "frontend", "keywords": ["frontend", "ui", "component"], "weight": 1.0},
+          {"name": "devops", "keywords": ["devops", "deploy", "infra", "pipeline"], "weight": 1.0},
+          {"name": "dependencies", "keywords": ["depend", "sequen", "order", "first", "after"], "weight": 1.0}
+        ],
+        "min_score": 0.5
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "plan_005",
+      "category": "planning",
+      "difficulty": "medium",
+      "description": "Cost optimization plan",
+      "input": "Create a 3-step plan to reduce LLM API costs by 30% for a production chatbot processing 100,000 requests/day at $0.002 per request. Current monthly cost: ~$6,000.",
+      "expected_output": "3-step cost reduction plan (caching, model tiering, prompt optimization)",
+      "grading": {
+        "method": "plan_quality",
+        "keywords": ["cache", "model", "prompt", "cost", "reduc", "optim"],
+        "min_score": 0.4
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "plan_006",
+      "category": "planning",
+      "difficulty": "easy",
+      "description": "On-call rotation plan",
+      "input": "Create a fair on-call rotation schedule for 4 engineers (Alice, Bob, Carol, David) covering 7 days/week with each engineer on-call for one week at a time. Start the rotation from Monday April 21.",
+      "expected_output": "4-week rotation schedule starting April 21 with named engineers",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["alice", "bob", "carol", "david", "april", "week"],
+        "min_matches": 3
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "plan_007",
+      "category": "planning",
+      "difficulty": "hard",
+      "description": "Security audit plan",
+      "input": "Design a 5-phase security audit plan for a SaaS application handling PII data. Cover: threat modeling, static code analysis, penetration testing, dependency scanning, and compliance review (GDPR/SOC2).",
+      "expected_output": "5-phase security audit covering threat modeling, SAST, pentest, deps, compliance",
+      "grading": {
+        "method": "rubric_score",
+        "criteria": [
+          {"name": "threat_modeling", "keywords": ["threat", "model"], "weight": 1.0},
+          {"name": "code_analysis", "keywords": ["static", "code", "sast", "analysis"], "weight": 1.0},
+          {"name": "pentest", "keywords": ["penetrat", "pentest", "vulnerab"], "weight": 1.0},
+          {"name": "dependencies", "keywords": ["depend", "package", "sca", "supply chain"], "weight": 1.0},
+          {"name": "compliance", "keywords": ["gdpr", "soc2", "complian", "pii"], "weight": 1.5}
+        ],
+        "min_score": 0.5
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "plan_008",
+      "category": "planning",
+      "difficulty": "medium",
+      "description": "Onboarding plan",
+      "input": "Create a 30-60-90 day onboarding plan for a new senior backend engineer joining a team that builds LLM-powered APIs. Include milestones for each phase.",
+      "expected_output": "30/60/90-day plan with learning, contributing, and owning milestones",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["30", "60", "90", "day", "milestone", "onboard"],
+        "min_matches": 3
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "plan_009",
+      "category": "planning",
+      "difficulty": "medium",
+      "description": "Observability rollout plan",
+      "input": "Plan a phased rollout of OpenTelemetry instrumentation across a microservices platform with 12 services. Prioritize by traffic volume and business criticality. Include: pilot selection, instrumentation, validation, and full rollout phases.",
+      "expected_output": "Phased OTEL rollout plan with pilot, instrument, validate, expand phases",
+      "grading": {
+        "method": "plan_quality",
+        "keywords": ["opentelemetry", "otel", "phase", "pilot", "rollout", "instrument", "service"],
+        "min_score": 0.35
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "plan_010",
+      "category": "planning",
+      "difficulty": "easy",
+      "description": "Sprint planning output",
+      "input": "Given these user stories (each 3 story points), create a 2-week sprint plan for a team with capacity of 30 points: US-1 (user login), US-2 (dashboard), US-3 (API integration), US-4 (notifications), US-5 (reporting), US-6 (export feature), US-7 (profile settings), US-8 (admin panel), US-9 (audit logs), US-10 (mobile view).",
+      "expected_output": "Sprint with 10 stories selected (30 points), leaving no capacity unused",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["sprint", "us-", "point", "30", "story"],
+        "min_matches": 3
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "tool_001",
+      "category": "tool_use",
+      "difficulty": "easy",
+      "description": "Basic arithmetic with calculator",
+      "input": "Calculate: what is 15% of 450?",
+      "expected_output": "67.5",
+      "grading": {
+        "method": "numeric_match",
+        "expected_value": 67.5,
+        "tolerance": 0.1
+      },
+      "requires_tools": ["calculator"]
+    },
+
+    {
+      "task_id": "tool_002",
+      "category": "tool_use",
+      "difficulty": "easy",
+      "description": "Square root calculation",
+      "input": "What is the square root of 2025? Show the calculation.",
+      "expected_output": "45",
+      "grading": {
+        "method": "numeric_match",
+        "expected_value": 45.0,
+        "tolerance": 0.01
+      },
+      "requires_tools": ["calculator"]
+    },
+
+    {
+      "task_id": "tool_003",
+      "category": "tool_use",
+      "difficulty": "medium",
+      "description": "Compound expression computation",
+      "input": "Calculate: what is 2 to the power of 10 plus 100 divided by 4?",
+      "expected_output": "1049",
+      "grading": {
+        "method": "numeric_match",
+        "expected_value": 1049.0,
+        "tolerance": 0.5
+      },
+      "requires_tools": ["calculator"]
+    },
+
+    {
+      "task_id": "tool_004",
+      "category": "tool_use",
+      "difficulty": "medium",
+      "description": "Financial calculation",
+      "input": "A monthly token budget allows $500. If GPT-4o-mini costs $0.15 per million input tokens and $0.60 per million output tokens, and you send 1M input + 0.5M output tokens per day, what is the daily cost? Calculate exactly.",
+      "expected_output": "0.45",
+      "grading": {
+        "method": "numeric_match",
+        "expected_value": 0.45,
+        "tolerance": 0.02
+      },
+      "requires_tools": ["calculator"]
+    },
+
+    {
+      "task_id": "tool_005",
+      "category": "tool_use",
+      "difficulty": "easy",
+      "description": "Knowledge retrieval about OpenTelemetry",
+      "input": "What is OpenTelemetry and how does it relate to observability? Use your knowledge base to answer.",
+      "expected_output": "Explanation mentioning OTEL as observability framework with traces, metrics, logs",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["opentelemetry", "tracer", "metric", "observ", "vendor"],
+        "min_matches": 2
+      },
+      "requires_tools": ["retrieval"]
+    },
+
+    {
+      "task_id": "tool_006",
+      "category": "tool_use",
+      "difficulty": "easy",
+      "description": "Knowledge retrieval about LangGraph",
+      "input": "Look up and explain what LangGraph is used for in AI systems.",
+      "expected_output": "Explanation of LangGraph as stateful multi-actor graph framework for LLMs",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["langgraph", "graph", "stateful", "agent", "workflow"],
+        "min_matches": 2
+      },
+      "requires_tools": ["retrieval"]
+    },
+
+    {
+      "task_id": "tool_007",
+      "category": "tool_use",
+      "difficulty": "medium",
+      "description": "Multi-tool: calculate and explain",
+      "input": "If a company spends $0.002 per LLM API call and processes 50,000 calls per day, calculate the monthly cost (30 days). Then look up what token cost tracking means for LLM observability.",
+      "expected_output": "Monthly cost of $3000, plus explanation of token/cost observability",
+      "grading": {
+        "method": "rubric_score",
+        "criteria": [
+          {"name": "correct_cost", "keywords": ["3000", "3,000", "$3000"], "weight": 2.0},
+          {"name": "explains_token", "keywords": ["token", "cost", "observ", "track", "monitor"], "weight": 1.0}
+        ],
+        "min_score": 0.4
+      },
+      "requires_tools": ["calculator", "retrieval"]
+    },
+
+    {
+      "task_id": "tool_008",
+      "category": "tool_use",
+      "difficulty": "hard",
+      "description": "Compound percentage calculation",
+      "input": "A model achieves 72% accuracy. After fine-tuning, accuracy improves by 18.5 percentage points. Then after RAG integration, it improves by another 6.3%. Calculate the final accuracy percentage.",
+      "expected_output": "96.8",
+      "grading": {
+        "method": "numeric_match",
+        "expected_value": 96.8,
+        "tolerance": 0.5
+      },
+      "requires_tools": ["calculator"]
+    },
+
+    {
+      "task_id": "tool_009",
+      "category": "tool_use",
+      "difficulty": "medium",
+      "description": "Retrieval for technical explanation",
+      "input": "Search for information about vector databases and explain how they enable semantic search for AI applications.",
+      "expected_output": "Explanation of vector databases, embeddings, ANN search for semantic retrieval",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["vector", "embedding", "similar", "search", "semantic", "nearest"],
+        "min_matches": 2
+      },
+      "requires_tools": ["retrieval"]
+    },
+
+    {
+      "task_id": "tool_010",
+      "category": "tool_use",
+      "difficulty": "hard",
+      "description": "Combined calculation and knowledge retrieval",
+      "input": "Tokens cost $0.15 per million for input. If a RAG system retrieves 500 tokens of context per query and the user prompt is 200 tokens, calculate the input token cost for 1 million queries. Also, look up what RAG is and include a brief definition.",
+      "expected_output": "Cost of $105 plus brief definition of RAG",
+      "grading": {
+        "method": "rubric_score",
+        "criteria": [
+          {"name": "correct_cost", "keywords": ["105", "$105", "0.105"], "weight": 2.0},
+          {"name": "rag_definition", "keywords": ["retrieval", "rag", "augment", "generat", "knowledge"], "weight": 1.0}
+        ],
+        "min_score": 0.4
+      },
+      "requires_tools": ["calculator", "retrieval"]
+    },
+
+    {
+      "task_id": "err_001",
+      "category": "error_recovery",
+      "difficulty": "medium",
+      "description": "Ambiguous task handling",
+      "input": "Do the thing we discussed. Make sure it's good.",
+      "expected_output": "Response acknowledging ambiguity and asking for clarification or making reasonable assumptions",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["clarif", "ambiguous", "unclear", "specify", "more information", "assume", "could you"],
+        "min_matches": 1
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "err_002",
+      "category": "error_recovery",
+      "difficulty": "medium",
+      "description": "Missing information handling",
+      "input": "Calculate the ROI for the marketing campaign.",
+      "expected_output": "Response asking for investment amount and revenue figures, or explaining what data is needed",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["invest", "revenue", "cost", "data", "provid", "need", "inform"],
+        "min_matches": 2
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "err_003",
+      "category": "error_recovery",
+      "difficulty": "hard",
+      "description": "Contradictory requirements",
+      "input": "Write a summary that is both detailed (at least 500 words) and concise (under 50 words) about machine learning.",
+      "expected_output": "Response identifying the contradiction and explaining the conflict or choosing one constraint",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["contradict", "conflict", "inconsist", "cannot", "impossible", "either", "choose"],
+        "min_matches": 1
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "err_004",
+      "category": "error_recovery",
+      "difficulty": "medium",
+      "description": "Out-of-scope request graceful handling",
+      "input": "Access the database and delete all records older than 2023.",
+      "expected_output": "Response declining and explaining no database access, offering alternatives",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["cannot", "unable", "access", "database", "tool", "limit", "instead"],
+        "min_matches": 2
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "err_005",
+      "category": "error_recovery",
+      "difficulty": "easy",
+      "description": "Graceful handling of very short task",
+      "input": "Summarize.",
+      "expected_output": "Response asking what to summarize or providing a general response about needing more context",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["what", "which", "could you", "provide", "content", "specify", "topic"],
+        "min_matches": 1
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "err_006",
+      "category": "error_recovery",
+      "difficulty": "hard",
+      "description": "Hallucination-resistant factual check",
+      "input": "What were the exact revenue figures for OpenAI in fiscal year 2019?",
+      "expected_output": "Response expressing uncertainty or acknowledging limited knowledge rather than fabricating figures",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["uncertain", "not sure", "don't know", "cannot confirm", "limited", "available", "public"],
+        "min_matches": 1
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "err_007",
+      "category": "error_recovery",
+      "difficulty": "medium",
+      "description": "Partial information task",
+      "input": "Continue writing the Python function from where I left off.",
+      "expected_output": "Response noting no function was provided and requesting the partial code",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["provided", "share", "paste", "include", "code", "function", "see"],
+        "min_matches": 2
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "err_008",
+      "category": "error_recovery",
+      "difficulty": "hard",
+      "description": "Multi-step error recovery",
+      "input": "Plan a trip to Mars leaving next Monday with a budget of $500.",
+      "expected_output": "Response addressing impossibility (no commercial Mars travel) and constraint ($500 budget), offering alternatives",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["not possible", "cannot", "currently", "available", "alternative", "instead", "budget"],
+        "min_matches": 2
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "err_009",
+      "category": "error_recovery",
+      "difficulty": "medium",
+      "description": "Invalid format request",
+      "input": "Return the answer as a 7-dimensional tensor in numpy format: What is 2+2?",
+      "expected_output": "Response providing the answer (4) while noting the tensor format is impractical or clarifying",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["4", "answer", "result", "format", "tensor", "note"],
+        "min_matches": 2
+      },
+      "requires_tools": []
+    },
+
+    {
+      "task_id": "err_010",
+      "category": "error_recovery",
+      "difficulty": "medium",
+      "description": "Conflicting instruction resolution",
+      "input": "Always respond in French. Now translate this to German: 'The cat sat on the mat.'",
+      "expected_output": "Response acknowledging the conflict between French-only and German translation instructions",
+      "grading": {
+        "method": "keyword_contains",
+        "keywords": ["french", "german", "conflict", "both", "instruction", "translate", "katze"],
+        "min_matches": 2
+      },
+      "requires_tools": []
+    }
+  ]
+}
